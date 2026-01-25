@@ -6,6 +6,7 @@ import express from "express";
 
 import errorHandler from "./middlewares/errorHandler.js";
 import companyRoutes from "./routes/companyRoutes.js";
+import transactionRoutes from "./routes/transactionRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -18,8 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", companyRoutes);
+app.use("/api", transactionRoutes);
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
