@@ -4,6 +4,7 @@ dotenv.config();
 import cors from "cors";
 import express from "express";
 
+import { fetchAndSaveCompanies } from "./controllers/liveDataController.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import companyRoutes from "./routes/companyRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", companyRoutes);
 app.use("/api", transactionRoutes);
+app.use("/api/sync", fetchAndSaveCompanies);
 
 app.use(errorHandler);
 
