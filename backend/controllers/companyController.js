@@ -51,6 +51,9 @@ const updateCompany = async (req, res, next) => {
     const updatedCompany = await updateCompanyModel(req.params.id, req.body);
     handleResponse(res, 200, updatedCompany, "Company updated successfully");
   } catch (error) {
+    if (error.message.includes("already exists")) {
+      handleResponse(res, 409, null, "Company with this symbol already exists");
+    }
     next(error);
   }
 };
