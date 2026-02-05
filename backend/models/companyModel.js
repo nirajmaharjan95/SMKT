@@ -22,7 +22,7 @@ const createCompanyModel = async (companyData) => {
   const { data: existingCompany, error: checkError } = await supabase
     .from("listed_companies")
     .select("id")
-    .eq("company", companyData.company);
+    .eq("symbol", companyData.symbol);
 
   if (checkError) throw new Error(checkError.message);
 
@@ -33,12 +33,13 @@ const createCompanyModel = async (companyData) => {
   const { data, error: insertError } = await supabase
     .from("listed_companies")
     .insert({
-      company: companyData.company.toUpperCase(),
-      company_fullname: companyData.company_fullname,
+      symbol: companyData.symbol.toUpperCase(),
+      company_name: companyData.company_name,
       sector: companyData.sector,
     })
     .select()
     .single();
+  console.log("🚀 ~ createCompanyModel ~ data:", data);
 
   if (insertError) throw new Error(insertError.message);
   return data;
@@ -48,8 +49,8 @@ const updateCompanyModel = async (id, companyData) => {
   const { data, error } = await supabase
     .from("listed_companies")
     .update({
-      company: companyData.company,
-      company_fullname: companyData.company_fullname,
+      symbol: companyData.symbol.toUpperCase(),
+      company_name: companyData.company_name,
       sector: companyData.sector,
     })
     .eq("id", id)

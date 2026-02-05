@@ -1,6 +1,6 @@
 const TRANSACTION_TYPE = {
-  BUY: "buy",
-  SELL: "sell",
+  BUY: "BUY",
+  SELL: "SELL",
 };
 
 const SOURCE_TYPE = {

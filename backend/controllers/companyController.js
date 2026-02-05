@@ -22,12 +22,15 @@ const getListedCompany = async (req, res, next) => {
 };
 
 const createCompany = async (req, res, next) => {
-  // Implementation for creating a company
   const companyData = req.body;
   try {
     const newCompany = await createCompanyModel(companyData);
     handleResponse(res, 201, newCompany, "Company created successfully");
   } catch (error) {
+    if (error.message.includes("already exists")) {
+      handleResponse(res, 409, null, "Company with this symbol already exists");
+    }
+
     next(error);
   }
 };
