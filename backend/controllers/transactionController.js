@@ -27,6 +27,9 @@ const createTransaction = async (req, res, next) => {
     const transactionData = req.body;
     const newTransaction = await createTransactionModel(transactionData);
 
+    if (!newTransaction) {
+      throw new Error("Transaction creation failed");
+    }
     handleResponse(
       res,
       201,
