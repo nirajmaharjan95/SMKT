@@ -27,4 +27,14 @@ const SEBON_FEE = (amount) => {
   return amount * 0.00015;
 };
 
-export { BROKERAGE_FEE, SEBON_FEE };
+const cleanNumber = (val) => {
+  if (!val) return null;
+  const cleaned = val
+    .toString()
+    .replace(/,/g, "")
+    .replace(/[^\d.-]/g, "");
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+};
+
+export { BROKERAGE_FEE, cleanNumber, SEBON_FEE };
