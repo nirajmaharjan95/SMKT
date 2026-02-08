@@ -6,7 +6,7 @@ import {
 import type { TableProps } from "../../types/table";
 
 const Table = <TData,>({ data, columns }: TableProps<TData>) => {
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),

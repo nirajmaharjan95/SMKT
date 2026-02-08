@@ -1,25 +1,42 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+interface AddCompanyProps {
+  editingCompany?: any;
+  onSuccess: (updatedCompany: CompanyFormData) => void;
+}
 interface CompanyFormData {
+  id: string;
   symbol: string;
   company_name: string;
   sector: string;
 }
 
-const AddCompany = () => {
+const AddCompany = ({ editingCompany, onSuccess }: AddCompanyProps) => {
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<CompanyFormData>({
     defaultValues: {
       symbol: "",
       company_name: "",
       sector: "",
     },
   });
+
+  useEffect(() => {
+    if (editingCompany) {
+      reset({
+        symbol: editingCompany.symbol,
+        company_name: editingCompany.company_name,
+        sector: editingCompany.sector,
+      });
+    }
+  }, [editingCompany, reset]);
 
   const onSubmit = async (data: CompanyFormData) => {
     try {
@@ -28,11 +45,26 @@ const AddCompany = () => {
         company_name: data.company_name.trim(),
         sector: data.sector,
       };
-      const response = await axios.post(
-        "http://localhost:5001/api/company",
-        payload,
-      );
-      console.log("Company added:", response.data);
+
+      let updatedCompany;
+
+      if (editingCompany) {
+        const response = await axios.put(
+          `http://localhost:5001/api/company/${editingCompany.id}`,
+          payload,
+        );
+        updatedCompany = response.data.data;
+      } else {
+        const response = await axios.post(
+          "http://localhost:5001/api/company",
+          payload,
+        );
+        updatedCompany = response.data.data;
+      }
+
+      if (onSuccess && updatedCompany) {
+        onSuccess(updatedCompany);
+      }
     } catch (error) {
       console.error("Error adding company:", error);
       if (
@@ -42,7 +74,7 @@ const AddCompany = () => {
       ) {
         setError("symbol", {
           type: "manual",
-          message: "Company with this symbol already exists.",
+          message: error.response.data.message,
         });
       }
     }
@@ -80,7 +112,7 @@ const AddCompany = () => {
       </div>
 
       <button className="btn btn-accent" type="submit">
-        Add Company
+        {editingCompany ? "Update Company" : "Add Company"}
       </button>
 
       {errors.symbol && (

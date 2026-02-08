@@ -1,3 +1,4 @@
+import type { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, Table } from "../../components";
@@ -5,31 +6,12 @@ import CustomModal from "../../components/common/CustomModal";
 import type { CompanyTableData } from "../../types/table";
 import AddCompany from "./AddCompany";
 
-const columns = [
-  {
-    header: "ID",
-    cell: (info: any) => info.row.index + 1,
-  },
-  {
-    accessorKey: "symbol",
-    header: "Symbol",
-    cell: (info: any) => info.getValue(),
-  },
-  {
-    accessorKey: "company_name",
-    header: "Company Name",
-    cell: (info: any) => info.getValue(),
-  },
-  {
-    accessorKey: "sector",
-    header: "Sector",
-    cell: (info: any) => info.getValue(),
-  },
-];
-
 const Companies = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editingCompany, setEditingCompany] = useState<CompanyTableData | null>(
+    null,
+  );
   const [data, setData] = useState<CompanyTableData[]>([]);
 
   useEffect(() => {
@@ -48,12 +30,78 @@ const Companies = () => {
     fetchData();
   }, []);
 
+  const columns: ColumnDef<CompanyTableData>[] = [
+    {
+      header: "ID",
+      cell: (info) => info.row.index + 1,
+    },
+    {
+      accessorKey: "symbol",
+      header: "Symbol",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "company_name",
+      header: "Company Name",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "sector",
+      header: "Sector",
+      cell: (info) => info.getValue(),
+    },
+    {
+      accessorKey: "",
+      header: "Actions",
+      cell: (row) => {
+        return (
+          <div className="flex space-x-2">
+            <button
+              className="btn btn-sm btn-outline btn-primary"
+              onClick={() => handleOnEdit(row.row.original)}
+            >
+              Edit
+            </button>
+            <button
+              className="btn btn-sm btn-outline btn-error"
+              onClick={() => handleOnDelete()}
+            >
+              Delete
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  function handleOnEdit(company: CompanyTableData) {
+    setEditingCompany(company);
+    setIsOpen(true);
+  }
+
+  function handleOnDelete() {
+    console.log("Delete company");
+  }
+
   function openModal() {
     setIsOpen(true);
   }
 
   function closeModal() {
     setIsOpen(false);
+  }
+
+  function handleOnSuccess(updatedCompany: CompanyTableData) {
+    setData((prev) => {
+      return prev.map((company) => {
+        if (company.id === updatedCompany.id) {
+          return updatedCompany;
+        }
+        return company;
+      });
+    });
+    setIsOpen(false);
+    setEditingCompany(null);
   }
 
   if (loading) {
@@ -74,7 +122,10 @@ const Companies = () => {
           onRequestClose={closeModal}
           title="Add Company"
         >
-          <AddCompany />
+          <AddCompany
+            editingCompany={editingCompany}
+            onSuccess={handleOnSuccess}
+          />
         </CustomModal>
       )}
     </>
