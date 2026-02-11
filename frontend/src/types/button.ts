@@ -3,4 +3,6 @@ export interface ButtonProps {
   variant?: "primary" | "outlined" | "ghost";
   onClick: () => void;
   disabled?: boolean;
+  className?: string;
+  children?: React.ReactNode;
 }

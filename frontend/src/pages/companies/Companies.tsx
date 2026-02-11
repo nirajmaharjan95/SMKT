@@ -114,6 +114,7 @@ const Companies = () => {
         <h1 className="text-2xl font-semibold text-gray-800">Companies</h1>
         <Button label="Add Company" variant="primary" onClick={openModal} />
       </div>
+
       <Table data={data} columns={columns} />
 
       {isOpen && (

@@ -1,7 +1,9 @@
 import {
+  ArrowLeftRight,
   BriefcaseBusiness,
   Building2,
   ChevronRight,
+  CloudSync,
   Eye,
   LayoutDashboard,
 } from "lucide-react";
@@ -24,6 +26,11 @@ const navItems: NavItem[] = [
     href: "/companies",
   },
   {
+    label: "Transactions",
+    icon: <ArrowLeftRight size={18} />,
+    href: "/transactions",
+  },
+  {
     label: "Portfolio",
     icon: <BriefcaseBusiness size={18} />,
     href: "/portfolio",
@@ -32,6 +39,11 @@ const navItems: NavItem[] = [
     label: "Watchlist",
     icon: <Eye size={18} />,
     href: "/watchlist",
+  },
+  {
+    label: "Live Data",
+    icon: <CloudSync size={18} />,
+    href: "/live-data",
   },
 ];
 

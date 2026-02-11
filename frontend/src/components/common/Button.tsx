@@ -2,17 +2,19 @@ import clsx from "clsx";
 import type { ButtonProps } from "../../types/button";
 
 const Button = (props: ButtonProps) => {
+  const { onClick, children, className, disabled, label, variant } = props;
   return (
     <button
-      className={clsx("btn", {
-        "btn-primary": props.variant === "primary",
-        "btn-outlined": props.variant === "outlined",
-        "btn-ghost": props.variant === "ghost",
+      className={clsx("btn", className, {
+        "btn-primary": variant === "primary",
+        "btn-outlined": variant === "outlined",
+        "btn-ghost": variant === "ghost",
       })}
-      onClick={props.onClick}
-      disabled={props.disabled}
+      onClick={onClick}
+      disabled={disabled}
     >
-      {props.label && props.label}
+      {label && label}
+      {!label && children}
     </button>
   );
 };
